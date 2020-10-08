@@ -1,2 +1,7 @@
 env/*
 .idea/*
+*__pycache__*
+build
+dist
+pyxfn.egg-info
+xfn.egg-info

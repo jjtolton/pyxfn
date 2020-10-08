@@ -1,6 +1,6 @@
+import builtins
 from collections import deque
 from functools import reduce
-
 
 class Reduced:
     def __init__(self, x):
@@ -120,7 +120,7 @@ def eduction(*xfn, multi=False):
                 yield eductor.__next.pop()
 
 
-def map(f):
+def xmap(f):
     def _map(rf):
         def map0():
             return rf()
@@ -146,7 +146,14 @@ def map(f):
     return _map
 
 
-def filter(pred):
+def map(*args):
+    if len(args) >= 2:
+        return builtins.map(*args)
+    else:
+        return xmap(*args)
+
+
+def xfilter(pred):
     def _filter(rf):
 
         def filter1(res):
@@ -168,6 +175,13 @@ def filter(pred):
         return __filter
 
     return _filter
+
+
+def filter(*args):
+    if len(args) > 2:
+        return filter(*args)
+    else:
+        return xfilter(*args)
 
 
 def preserving_reduced(rf):
@@ -259,7 +273,7 @@ def interpose(sep):
 
 
 def remove(pred):
-    return filter(lambda x: not pred(x))
+    return xfilter(lambda x: not pred(x))
 
 
 def distinct(rf):
@@ -523,7 +537,7 @@ if __name__ == '__main__':
                          interpose("-"),
                          map(lambda x: [x] if isinstance(x, str) else x),
                          cat,
-                         map(str)),
+                         xmap(str)),
                     lambda a, b: (a.append(b), a)[1],
                     lambda res: ''.join(res),
                     [],
