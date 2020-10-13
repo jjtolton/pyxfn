@@ -41,8 +41,7 @@ def comp(*fns):
 def undreduced(x):
     if is_reduced(x):
         return x.value
-    else:
-        return x
+    return x
 
 
 def ensure_reduced(x):
@@ -203,7 +202,7 @@ def cat(rf):
     rf1 = preserving_reduced(rf)
 
     def cat2(res, input):
-        return reduce(rf1, input, res)
+        return xreduce(rf1, input, res)
 
     mapper = {0: rf, 1: rf, 2: cat2}
 
@@ -572,3 +571,8 @@ if __name__ == '__main__':
                         range(20))))
 
     print(tuple(eduction(take(10), range(10))))
+
+    print(transduce(
+        comp(random_sample(0.5), mapcat(lambda x: [x] * x), take(10)),
+        lambda res, x: (res.append(x), res)[-1], lambda res: res, [],
+        range(10000)))
