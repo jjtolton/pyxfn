@@ -55,11 +55,12 @@ def xreduce(f, coll, init):
     # reduce with a cc style escape for "reduced" values
     try:
         def ccshim(a, b):
-            if is_reduced(a):
-                xreduce.res = undreduced(a)
+            res = f(a, b)
+            if is_reduced(res):
+                xreduce.res = undreduced(res)
                 raise ThrowReduced
             else:
-                return f(a, b)
+                return res
 
         return reduce(ccshim, coll, init)
     except ThrowReduced:
@@ -485,7 +486,7 @@ def take(n):
                 res = rf(res, input)
             else:
                 res = res
-            if (nn > 0) is not True:
+            if nn <= 0:
                 return ensure_reduced(res)
             return res
 
@@ -501,7 +502,7 @@ def mapcat(f):
 
 
 def random_sample(prob):
-    return filter(lambda _: prob < random.random())
+    return filter(lambda _: random.random() < prob)
 
 
 if __name__ == '__main__':
@@ -573,6 +574,17 @@ if __name__ == '__main__':
     print(tuple(eduction(take(10), range(10))))
 
     print(transduce(
-        comp(random_sample(0.5), mapcat(lambda x: [x] * x), take(10)),
+        comp(random_sample(0.01),
+             mapcat(lambda x: [x] * x),
+             take(1000)),
         lambda res, x: (res.append(x), res)[-1], lambda res: res, [],
         range(10000)))
+
+    # reduced stress test #
+    # while True:
+    #     sum(transduce(
+    #     comp(random_sample(0.01),
+    #          mapcat(lambda x: [x] * x),
+    #          take(1000)),
+    #     lambda res, x: (res.append(x), res)[-1], lambda res: res, [],
+    #     range(10000)))

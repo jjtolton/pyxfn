@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='xfn',
-    version='0.2.1',
+    version='0.2.2',
     packages=['xfn'],
     url='https://github.com/jjtolton/pyxfn',
     license='MIT',
