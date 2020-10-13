@@ -1,6 +1,11 @@
 import builtins
+import itertools
+import random
 from collections import deque
 from functools import reduce
+
+__author__ = "James J. Tolton"
+
 
 class Reduced:
     def __init__(self, x):
@@ -99,7 +104,7 @@ def eduction(*xfn, multi=False):
 
     xfns = comp(*xfns)(eductor)
     completed = False
-    while True and not completed:
+    while not completed:
         try:
             while len(eductor.__next) == 0 and not completed:
                 if multi is True:
@@ -490,6 +495,14 @@ def take(n):
         return __take
 
     return _take
+
+
+def mapcat(f):
+    return comp(map(f), cat)
+
+
+def random_sample(prob):
+    return filter(lambda _: prob < random.random())
 
 
 if __name__ == '__main__':
